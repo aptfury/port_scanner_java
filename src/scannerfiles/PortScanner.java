@@ -24,15 +24,10 @@ public class PortScanner {
 
         if (!hostName.isEmpty()) {
             for (int port = ports[0]; port <= ports[1]; port++) {
-                try {
-                    Socket socket = new Socket();
+                try (Socket socket = new Socket();) {
                     InetSocketAddress inetSocketAddress = new InetSocketAddress(hostName, port);
-
                     socket.connect(inetSocketAddress, 200); // times out after 200ms
-
                     log(hostName, port, true);
-
-                    socket.close();
                 }
                 catch (IOException e) {
                     if (verbose) {
@@ -72,23 +67,51 @@ public class PortScanner {
     /**
      * Requests the port range the user wants to scan.
      *
-     * @param input [Scanner] - the scanner variable set up in main (Default: 0-65535)
+     * @param input [Scanner] - the scanner variable set up in main (Default: 1-65535)
      * @return [int[]] - the port range provided by the user
      */
     public static int[] requestPortRange(Scanner input) {
-        int[] ports = {0, 65535};
+        int[] ports = {1, 65535};
 
-        System.out.println("Enter the starting port: ");
+        System.out.println("Enter the starting port (1 to 65535): ");
         String start = input.nextLine().trim();
 
-        System.out.println("Enter the ending port: ");
+        System.out.println("Enter the ending port (1 to 65535): ");
         String stop = input.nextLine().trim();
 
         try {
-            if (!start.isEmpty()) ports[0] = Integer.parseInt(start);
-            if (!stop.isEmpty()) ports[1] = Integer.parseInt(stop);
+            int port = 0;
+
+            if (!start.isEmpty()) port = Integer.parseInt(start);
+
+            if (port >= 1 && port <= 65535) {
+                ports[0] = port;
+            }
+            else {
+                System.out.println(port + " is not a valid port. Starting port will default to 1.");
+            }
         }
-        catch (NumberFormatException _) {}
+        catch (NumberFormatException _) {
+            System.out.println("NUMBER FORMAT EXCEPTION: Input could not be converted to an integer. Starting port " +
+                    "will default to 1.");
+        }
+
+        try {
+            int port = 0;
+
+            if (!stop.isEmpty()) port = Integer.parseInt(stop);
+
+            if (port > ports[0] && port < 65535) {
+                ports[1] = port;
+            }
+            else {
+                System.out.println(port + " is not a valid port. Stopping port will default to 65535.");
+            }
+        }
+        catch (NumberFormatException _) {
+            System.out.println("NUMBER FORMAT EXCEPTION: Input could not be converted to an integer. Stopping port " +
+                    "will default to 65535.");
+        }
 
         return ports;
     }
