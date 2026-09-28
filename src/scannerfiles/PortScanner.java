@@ -8,7 +8,7 @@ import java.net.InetSocketAddress;
 import java.util.Scanner;
 
 /**
- * @author B
+ * @author Blake
  * @version 09.28.26
  *
  * An admin utility to scan for open ports on the host network.
