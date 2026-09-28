@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.net.InetSocketAddress;
 import java.util.Scanner;
 
 /**
@@ -24,8 +25,13 @@ public class PortScanner {
         if (!hostName.isEmpty()) {
             for (int port = ports[0]; port <= ports[1]; port++) {
                 try {
-                    Socket socket = new Socket(hostName, port);
+                    Socket socket = new Socket();
+                    InetSocketAddress inetSocketAddress = new InetSocketAddress(hostName, port);
+
+                    socket.connect(inetSocketAddress, 200); // times out after 200ms
+
                     log(hostName, port, true);
+
                     socket.close();
                 }
                 catch (IOException e) {
