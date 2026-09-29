@@ -180,10 +180,9 @@ public class PortScannerTests {
 
         PortScanner.main(new String[]{""});
         String output = OUTPUT_CAPTURE.toString().trim();
-        output = output.replace("Enter the host name: \r\n", "");
-        output = output.replace("Enter the starting port (1 to 65535): \r\n", "");
-        output = output.replace("Enter the ending port (1 to 65535): \r\n", "");
-        output = output.replace("Log closed ports? (n): \r\n", "");
+        int index = output.indexOf("localhost");
+        String discard = index > 0 ? output.substring(0, index) : output.substring(0);
+        output = output.replace(discard, "");
 
         if (input.endsWith("No\n")) {
             assertTrue(output.startsWith("localhost:") && output.endsWith(" | OPEN"));
