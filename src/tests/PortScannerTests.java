@@ -34,7 +34,7 @@ public class PortScannerTests {
     }
 
     @BeforeEach
-    public void setUpOutput() {
+    public void setUp() {
         System.setOut(new PrintStream(OUTPUT_CAPTURE));
         PortScanner.testing = true;
     }
