@@ -21,24 +21,45 @@ import java.io.ByteArrayOutputStream;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
+/**
+ * @author Blake
+ * @version 09.28.26
+ *
+ * Test cases for the PortScanner class. User inputs, defaults, and exceptions are tested.
+ */
+
 @DisplayName("Port Scanner Tests")
 public class PortScannerTests {
 
-    private final PrintStream STANDARD_OUTPUT = System.out;
-    private final Scanner STANDARD_SCANNER = new Scanner(System.in);
+    public final PrintStream STANDARD_OUTPUT = System.out;
+    public final Scanner STANDARD_SCANNER = new Scanner(System.in);
     private final ByteArrayOutputStream OUTPUT_CAPTURE = new ByteArrayOutputStream();
 
+    /**
+     * Creates a mocked scanner using ByteArrayInputStream to inject user inputs into test cases.
+     *
+     * @param input [String] - the information to be injected into the test case
+     * @return [Scanner] - the mocked scanner
+     */
     private Scanner mockScanner(String input) {
         ByteArrayInputStream inputBytes = new ByteArrayInputStream(input.getBytes());
         return new Scanner(inputBytes);
     }
 
+    /**
+     * Swaps the output to a controlled Byte Array Stream for testing and marks PortScanner as in testing.
+     */
     @BeforeEach
     public void setUp() {
         System.setOut(new PrintStream(OUTPUT_CAPTURE));
         PortScanner.testing = true;
     }
 
+    /**
+     * Tests retrieval of network host name based on user input.
+     *
+     * @throws UnknownHostException - when host name could not be found
+     */
     @Test
     @Tag("success")
     @Tag("user_input")
@@ -52,6 +73,11 @@ public class PortScannerTests {
         assertEquals(expected, actual);
     }
 
+    /**
+     * Tests retrieval of network host name based on programmed default when there is no user input.
+     *
+     * @throws UnknownHostException - when host name could not be found
+     */
     @Test
     @Tag("success")
     @Tag("default")
@@ -65,6 +91,9 @@ public class PortScannerTests {
         assertEquals(expected, actual);
     }
 
+    /**
+     * Tests that UnknownHostException is working with invalid host name.
+     */
     @Test
     @Tag("failure")
     @Tag("exception")
@@ -82,6 +111,11 @@ public class PortScannerTests {
         assertEquals(expected.getMessage(), actual.getMessage());
     }
 
+    /**
+     * Tests retrieval of port range based on user input.
+     *
+     * @throws NumberFormatException - when input cannot be converted to an int
+     */
     @Test
     @Tag("success")
     @Tag("user_input")
@@ -96,6 +130,11 @@ public class PortScannerTests {
         assertEquals(expected[1], actual[1]);
     }
 
+    /**
+     * Tests retrieval of port range from defaults when there is no user input.
+     *
+     * @throws NumberFormatException - when input cannot be converted to an int
+     */
     @Test
     @Tag("success")
     @Tag("default")
@@ -110,6 +149,11 @@ public class PortScannerTests {
         assertEquals(expected[1], actual[1]);
     }
 
+    /**
+     * Tests that NumberFormatException is working for invalid port number(s).
+     *
+     * @param input [String] - unique inputs for test cases
+     */
     @ParameterizedTest
     @Tag("failure")
     @Tag("exception")
@@ -129,6 +173,11 @@ public class PortScannerTests {
         assertEquals(expected.getMessage(), actual.getMessage());
     }
 
+    /**
+     * Tests setting the verbosity flag based on user input.
+     *
+     * @param input [String] - unique inputs for test cases
+     */
     @ParameterizedTest
     @Tag("success")
     @Tag("user_input")
@@ -143,6 +192,11 @@ public class PortScannerTests {
         assertEquals(expected, actual);
     }
 
+    /**
+     * Test setting the verbosity flag to default when there is no user input or user input is not valid.
+     *
+     * @param input [String] - unique inputs for test cases
+     */
     @ParameterizedTest
     @Tag("success")
     @Tag("default")
@@ -157,6 +211,11 @@ public class PortScannerTests {
         assertEquals(expected, actual);
     }
 
+    /**
+     * Tests console logging accuracy.
+     *
+     * @param input [String] - unique inputs for test cases
+     */
     @ParameterizedTest
     @Tag("success")
     @ValueSource(booleans = {true, false, true, false})
@@ -170,6 +229,12 @@ public class PortScannerTests {
         assertEquals(expected, actual);
     }
 
+    /**
+     * Tests the port scanner's functionality once all methods have been integrated and with user input.
+     *
+     * @param input [String] - unique inputs for test cases
+     * @throws Exception - informs the user that the network could not be found (not currently tested)
+     */
     @ParameterizedTest
     @Tag("success")
     @Tag("user_input")
@@ -192,6 +257,12 @@ public class PortScannerTests {
         }
     }
 
+    /**
+     * Tests the port scanner's functionality once all methods have been integrated and with various defaults.
+     *
+     * @param input [String] - unique inputs for test cases
+     * @throws Exception - informs the user that the network could not be found (not currently tested)
+     */
     @ParameterizedTest
     @Tag("success")
     @Tag("default")
@@ -220,6 +291,11 @@ public class PortScannerTests {
             assertTrue(output.startsWith("localhost:") && (output.endsWith(" | OPEN") || output.endsWith(" | CLOSED")));
         }
     }
+
+    /**
+     * Tears down the testing set up by returning console output put normal, setting testing back to false, and
+     * setting input back to original scanner.
+     */
     @AfterEach
     public void tearDown() {
         System.setOut(STANDARD_OUTPUT);
