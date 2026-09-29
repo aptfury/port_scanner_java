@@ -18,16 +18,8 @@ import java.util.Scanner;
 
 public class PortScanner {
 
-    public static boolean testing = false;
-    public static Scanner input = new Scanner(System.in);
-
-    /*public PortScanner(Scanner scanner, boolean isTest) {
-        testing = isTest;
-
-        if (isTest) {
-            input = scanner;
-        }
-    }*/
+    public static boolean testing;
+    public static Scanner input;
 
     public static void main(String[] args) throws Exception {
         if (testing) {
@@ -37,8 +29,8 @@ public class PortScanner {
             }
         }
         else {
-            if (!input.equals(new Scanner(System.in))) {
-                throw new IOException("PortScanner is not marked for testing but is not configured to read System.");
+            if (input == null || !input.equals(new Scanner(System.in))) {
+                input = new Scanner(System.in);
             }
         }
 
