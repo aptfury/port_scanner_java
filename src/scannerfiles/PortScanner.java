@@ -1,5 +1,7 @@
 package scannerfiles;
 
+import org.opentest4j.TestAbortedException;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -15,8 +17,30 @@ import java.util.Scanner;
  */
 
 public class PortScanner {
+
+    public static boolean testing = false;
+    public static Scanner input = new Scanner(System.in);
+
+    /*public PortScanner(Scanner scanner, boolean isTest) {
+        testing = isTest;
+
+        if (isTest) {
+            input = scanner;
+        }
+    }*/
+
     public static void main(String[] args) throws Exception {
-        Scanner input = new Scanner(System.in);
+        if (testing) {
+            if (input.equals(new Scanner(System.in))) {
+                throw new TestAbortedException("PortScanner is marked for testing but is not configured to read " +
+                        "mockScanner.");
+            }
+        }
+        else {
+            if (!input.equals(new Scanner(System.in))) {
+                throw new IOException("PortScanner is not marked for testing but is not configured to read System.");
+            }
+        }
 
         String hostName = requestHostName(input);
         int[] ports = requestPortRange(input);
@@ -57,8 +81,8 @@ public class PortScanner {
             InetAddress inetAddress = InetAddress.getByName(host);
             hostName = inetAddress.getHostName();
         }
-        catch (UnknownHostException e) {
-            System.out.println(e.getMessage());
+        catch (UnknownHostException _) {
+            throw new UnknownHostException(host + " is not a valid host name.");
         }
 
         return hostName;
@@ -91,8 +115,8 @@ public class PortScanner {
                 System.out.println(port + " is not a valid port. Starting port will default to 1.");
             }
         }
-        catch (NumberFormatException _) {
-            System.out.println("NUMBER FORMAT EXCEPTION: Input could not be converted to an integer. Starting port " +
+        catch (Exception _) {
+            throw new NumberFormatException("NUMBER FORMAT EXCEPTION: Input could not be converted to an integer. Starting port " +
                     "will default to 1.");
         }
 
