@@ -1,5 +1,4 @@
 # Basic Port Scanner Program
-___
 
 This is a port scanner I decided to build for my developer portfolio. It was meant to be
 relatively simple, and will likely be expanded on over time. At the moment, it does not have
@@ -12,8 +11,7 @@ issue and I will get to it when I can.
 building it will be included below. Please note that while _I_ choose to abstain from using
 AI, I cannot guarantee that the resources listed did not use it in some capacity.
 
-### Resources
-___
+## Resources
 
 This is a complete list of the resources used, in no particular order. I will continue to update
 it if I continue adding to this project.
